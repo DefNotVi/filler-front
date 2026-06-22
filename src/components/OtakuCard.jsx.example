@@ -1,0 +1,37 @@
+import React, { useContext } from 'react'; // Importamos useContext nativo
+import { Heart, X } from 'lucide-react';
+import { PerfilContext } from '../context/PerfilContext'; // Importamos el contexto plano
+
+export const OtakuCard = () => {
+  // Consumo nativo del contexto
+  const { perfilActual, enviarReaccion } = useContext(PerfilContext);
+
+  if (!perfilActual) return null;
+
+  return (
+    <div className="otaku-card">
+      <div className="card-image-container">
+        <img 
+            src={`http://localhost:8080/api/perfiles/proxy-image?url=${encodeURIComponent(perfilActual.fotoUrl)}`} 
+            alt={perfilActual.nombre} 
+            className="card-image" 
+        />
+        <div className="badge-olor">Olor: {perfilActual.nivelDeOlor}/10 🧄</div>
+      </div>
+      
+      <div className="card-info">
+        <h2>{perfilActual.nombre} <span className="origen">({perfilActual.animeOOrigen})</span></h2>
+        <p className="description">{perfilActual.descripcion}</p>
+      </div>
+
+      <div className="card-actions">
+        <button onClick={() => enviarReaccion('DISLIKE')} className="btn-action btn-dislike">
+          <X size={28} />
+        </button>
+        <button onClick={() => enviarReaccion('LIKE')} className="btn-action btn-like">
+          <Heart size={28} fill="currentColor" />
+        </button>
+      </div>
+    </div>
+  );
+};

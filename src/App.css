@@ -1,0 +1,188 @@
+:root {
+  --primary-otaku: #ff4b6e;
+  --bg-dark: #121214;
+  --card-bg: #202024;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #e1e1e6;
+}
+
+.tinder-otaku-app {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.swap-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.app-header {
+  text-align: center;
+}
+
+.app-header h1 {
+  color: var(--primary-otaku);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.subtitle {
+  color: #8d8d99;
+  margin-top: 0;
+  font-style: italic;
+}
+
+.card-container {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 20px;
+}
+
+.otaku-card {
+  background-color: var(--card-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  border: 2px solid #323238;
+}
+
+.card-image-container {
+  position: relative;
+  height: 380px;
+  background-color: #121214;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-olor {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.card-info {
+  padding: 20px;
+  min-height: 110px;
+}
+
+.card-info h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+}
+
+.origen {
+  font-size: 1rem;
+  color: #00b37e;
+  font-weight: normal;
+}
+
+.description {
+  color: #c4c4cc;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.btn-action {
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+.btn-dislike {
+  background-color: #29292e;
+  color: #f75a68;
+}
+.btn-dislike:hover {
+  background-color: #f75a68;
+  color: white;
+}
+
+.btn-like {
+  background-color: #29292e;
+  color: #00b37e;
+}
+.btn-like:hover {
+  background-color: #00b37e;
+  color: white;
+}
+
+.no-more-profiles {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  border: 2px dashed #323238;
+}
+
+.loading {
+  font-size: 1.2rem;
+  color: #8d8d99;
+  margin-top: 100px;
+  font-weight: bold;
+}
+
+.feedback-popup {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.feedback-popup.is-match {
+  background-color: #015f43;
+  color: #00b37e;
+  border: 1px solid #00b37e;
+}
+
+.feedback-popup.is-friendzone {
+  background-color: #aa2222;
+  color: #f75a68;
+  border: 1px solid #f75a68;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
