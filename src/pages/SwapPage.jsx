@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'; // Importamos useContext nativo
+import React, { useContext } from 'react'; 
 import { Sparkles } from 'lucide-react';
-import { PerfilContext } from '../context/PerfilContext'; // Importamos el contexto plano
+import { PerfilContext } from '../context/PerfilContext'; 
 import { OtakuCard } from '../components/OtakuCard';
 
 export const SwapPage = () => {
@@ -8,14 +8,14 @@ export const SwapPage = () => {
   const { perfilActual, mensajeMatch, cargando } = useContext(PerfilContext);
 
   if (cargando) {
-    return <div className="loading">Invocando el ganado otaku desde el backend...</div>;
+    return <div className="loading">Invocando a los grasosos esos desde el backend...</div>;
   }
 
   return (
     <div className="swap-page">
       <header className="app-header">
         <h1>
-          <Sparkles className="icon-spin" /> Tinder Otaku/Geek <Sparkles className="icon-spin" />
+          <Sparkles className="icon-spin" /> Filler/Tinder otaku <Sparkles className="icon-spin" />
         </h1>
         <p className="subtitle">Encuentra tu media naranja (o tu contraparte de dúo en Lol)</p>
       </header>
@@ -26,7 +26,7 @@ export const SwapPage = () => {
         ) : (
           <div className="no-more-profiles">
             <h2>No more Larping...</h2>
-            <p>No quedan más especímenes disponibles.</p>
+            <p>No hay mas gente, fuera.</p>
           </div>
         )}
 

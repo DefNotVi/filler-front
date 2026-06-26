@@ -11,7 +11,7 @@ export const PerfilProvider = ({ children }) => {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    // Corregido a comillas invertidas (Backticks) para que inyecte bien la variable
+    // Corregido a Backticks para que inyecte bien la variable
     fetch(`${API_BASE_URL}/api/perfiles`)
       .then(response => response.json())
       .then(data => {
@@ -29,7 +29,7 @@ export const PerfilProvider = ({ children }) => {
     if (!perfilActual) return;
     setMensajeMatch(""); 
 
-    // 1. Guardar en el backend principal (filler-back-main)
+    // Guardar en el backend principal (filler-back-main)
     fetch(`${API_BASE_URL}/api/perfiles/reaccion`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ export const PerfilProvider = ({ children }) => {
       .then(data => {
         setMensajeMatch(data.mensaje);
 
-        // 2. NUEVO: Guardar en el backend de resumen (filler-resumen) usando los datos de perfilActual
+        // Guardar en el backend de resumen (filler-resumen) usando los datos de perfilActual
         fetch(`${API_BASE_URL}/api/v1/resumen/api/reacciones`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,7 +54,7 @@ export const PerfilProvider = ({ children }) => {
         .then(resumenGuardado => console.log("Historial guardado en resumen:", resumenGuardado))
         .catch(err => console.error("Error al reportar al backend de resumen:", err));
 
-        // 3. Pasar al siguiente perfil en la interfaz de usuario
+        // Pasar al siguiente perfil en la interfaz de usuario
         const nuevosPerfiles = perfiles.slice(1);
         setPerfiles(nuevosPerfiles);
         setPerfilActual(nuevosPerfiles.length > 0 ? nuevosPerfiles[0] : null);

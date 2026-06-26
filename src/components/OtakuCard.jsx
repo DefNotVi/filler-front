@@ -9,7 +9,7 @@ export const OtakuCard = () => {
 
   if (!perfilActual) return null;
 
-  // Construimos la URL del proxy de tu backend
+  
   // encodeURIComponent asegura que el link de internet no rompa los parámetros de la URL
   const urlImagenConProxy = `${API_BASE_URL}/api/perfiles/proxy-image?url=${encodeURIComponent(perfilActual.fotoUrl)}`;
 
@@ -21,8 +21,8 @@ export const OtakuCard = () => {
           alt={perfilActual.nombre} 
           className="card-image" 
           onError={(e) => {
-            // Salvavidas por si un link llega a caerse (Muestra un placeholder gracioso)
-            e.target.src = "https://via.placeholder.com/300x400?text=Error+al+cargar+waifu";
+            // Salvavidas por si un link llega a caerse (no abran la imagen, no rompe nada, solo no lo hagan)
+            e.target.src = "https://i.imgur.com/fGBdnlD.png";
           }}
         />
         <div className="badge-olor">Olor: {perfilActual.nivelDeOlor}/10 🧄</div>
