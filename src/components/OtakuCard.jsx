@@ -5,11 +5,13 @@ import { PerfilContext } from '../context/PerfilContext';
 export const OtakuCard = () => {
   const { perfilActual, enviarReaccion } = useContext(PerfilContext);
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   if (!perfilActual) return null;
 
   // Construimos la URL del proxy de tu backend
   // encodeURIComponent asegura que el link de internet no rompa los parámetros de la URL
-  const urlImagenConProxy = `http://localhost:8080/api/perfiles/proxy-image?url=${encodeURIComponent(perfilActual.fotoUrl)}`;
+  const urlImagenConProxy = `${API_BASE_URL}/api/perfiles/proxy-image?url=${encodeURIComponent(perfilActual.fotoUrl)}`;
 
   return (
     <div className="otaku-card">
