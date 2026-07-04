@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { Sparkles } from 'lucide-react';
 import { PerfilContext } from '../context/PerfilContext'; 
 import { OtakuCard } from '../components/OtakuCard';
+import { UserMenu } from '../components/UserMenu'; 
 
-export const SwapPage = () => {
-  // Consumo nativo del contexto
+export const SwapPage = ({ onLogout }) => {
   const { perfilActual, mensajeMatch, cargando } = useContext(PerfilContext);
 
   if (cargando) {
@@ -13,11 +13,16 @@ export const SwapPage = () => {
 
   return (
     <div className="swap-page">
-      <header className="app-header">
-        <h1>
-          <Sparkles className="icon-spin" /> Filler/Tinder otaku <Sparkles className="icon-spin" />
-        </h1>
-        <p className="subtitle">Encuentra tu media naranja (o tu contraparte de dúo en Lol)</p>
+      <header className="app-header header-with-action">
+        <div className="header-title-block">
+          <h1>
+            <Sparkles className="icon-spin" /> Filler/Tinder otaku <Sparkles className="icon-spin" />
+          </h1>
+          <p className="subtitle">Encuentra tu media naranja (o tu contraparte de dúo en Lol)</p>
+        </div>
+        
+        {/* EN LA ESQUINA DERECHA DE LA TARJETA */}
+        <UserMenu onLogout={onLogout} />
       </header>
 
       <main className="card-container">

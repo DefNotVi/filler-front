@@ -330,3 +330,114 @@ body {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================
+   BOTÓN DE PERFIL DE ESQUINA EN LA TARJETA (CORREGIDO)
+   ========================================== */
+
+/* Alineación de la cabecera */
+.header-with-action {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  /* EXCLUSIVO: Añadimos un margen abajo para alejar la tarjeta y que no tape la imagen */
+  margin-bottom: 25px !important; 
+}
+
+.header-title-block {
+  flex: 1;
+  /* Evita que el título se meta debajo del botón si es muy largo */
+  padding-right: 45px; 
+}
+
+.user-menu-container {
+  /* Forzamos que se ubique de forma absoluta arriba a la derecha de la cabecera */
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* El círculo en la esquina superior derecha */
+.user-avatar-btn {
+  background-color: #121214;
+  border: 1px solid #323238;
+  color: #8d8d99;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-avatar-btn:hover {
+  border-color: var(--primary-otaku);
+  color: var(--primary-otaku);
+  background-color: #1a1a1e;
+}
+
+/* El menú flotante cyberpunk */
+.user-dropdown-menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background-color: var(--card-bg);
+  border: 1px solid #323238;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  min-width: 160px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeInDropdown 0.2s ease-out;
+}
+
+.dropdown-user-info {
+  padding: 12px;
+  background-color: #121214;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #323238;
+}
+
+.username-text {
+  font-weight: bold;
+  color: #e1e1e6;
+  font-size: 0.9rem;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #00b37e;
+  margin-top: 2px;
+}
+
+.dropdown-logout-btn {
+  background: transparent;
+  border: none;
+  color: #f75a68;
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.dropdown-logout-btn:hover {
+  background-color: rgba(247, 90, 104, 0.1);
+}
+
+@keyframes fadeInDropdown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
