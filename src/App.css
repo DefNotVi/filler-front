@@ -441,3 +441,14 @@ body {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* ==========================================
+   FOTO DE PERFIL DEL USUARIO
+   ========================================== */
+
+.user-avatar-image {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}

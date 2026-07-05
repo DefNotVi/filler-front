@@ -6,6 +6,7 @@ import { HistorialPage } from './pages/HistorialPage';
 import { LoginPage } from './pages/LoginPage';
 import { Flame, ClipboardList } from 'lucide-react'; 
 import './App.css';
+import PerfilPage from "./pages/PerfilPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,12 +53,28 @@ function App() {
 
             {/* CONTENIDO DINÁMICO PASANDO LA ACCIÓN DE LOGOUT */}
             <main className="content-container">
-              {vistaActiva === 'swap' ? (
-                <SwapPage onLogout={handleLogout} />
-              ) : (
-                <HistorialPage onLogout={handleLogout} />
-              )}
-            </main>
+
+  {vistaActiva === "swap" && (
+    <SwapPage
+      onLogout={handleLogout}
+      onEditarPerfil={() => setVistaActiva("perfil")}
+    />
+  )}
+
+  {vistaActiva === "historial" && (
+    <HistorialPage
+      onLogout={handleLogout}
+      onEditarPerfil={() => setVistaActiva("perfil")}
+    />
+  )}
+
+  {vistaActiva === "perfil" && (
+    <PerfilPage
+      volver={() => setVistaActiva("swap")}
+    />
+  )}
+
+</main>
 
           </div>
         </div>

@@ -1,12 +1,19 @@
 import React, { useContext } from 'react';
+import { UserMenu } from '../components/UserMenu';
 import { ResumenContext } from '../context/ResumenContext';
 import { RefreshCw } from 'lucide-react'; // Icono moderno para refrescar
 
-export const HistorialPage = () => {
+export const HistorialPage = ({ onLogout, onEditarPerfil }) => {
   const { historial, cargandoResumen, refrescarHistorial } = useContext(ResumenContext);
 
   return (
     <div className="historial-container">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+  <UserMenu
+    onLogout={onLogout}
+    onEditarPerfil={onEditarPerfil}
+  />
+</div>
       <h2 className="historial-title">📋 Historial de Decisiones</h2>
       
       <button onClick={refrescarHistorial} className="btn-refresh">

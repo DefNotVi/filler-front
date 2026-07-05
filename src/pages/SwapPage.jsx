@@ -4,7 +4,7 @@ import { PerfilContext } from '../context/PerfilContext';
 import { OtakuCard } from '../components/OtakuCard';
 import { UserMenu } from '../components/UserMenu'; 
 
-export const SwapPage = ({ onLogout }) => {
+export const SwapPage = ({ onLogout, onEditarPerfil }) => {
   const { perfilActual, mensajeMatch, cargando } = useContext(PerfilContext);
 
   if (cargando) {
