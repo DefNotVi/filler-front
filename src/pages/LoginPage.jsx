@@ -58,7 +58,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
       <div className="login-card">
         <header className="app-header">
           <h1>
-            <Sparkles className="icon-spin" /> Filler Auth <Sparkles className="icon-spin" />
+            <Sparkles className="icon-spin" /> Filler <Sparkles className="icon-spin" />
           </h1>
           <p className="subtitle">
             {isRegister ? 'Crea tu cuenta para buscar tu dúo' : 'Ingresa al Tinder Otaku'}

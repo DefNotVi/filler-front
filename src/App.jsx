@@ -3,10 +3,10 @@ import { PerfilProvider } from './context/PerfilContext';
 import { ResumenProvider } from './context/ResumenContext';
 import { SwapPage } from './pages/SwapPage';
 import { HistorialPage } from './pages/HistorialPage'; 
+import { PerfilPage } from './pages/PerfilPage'; // Importamos la nueva página
 import { LoginPage } from './pages/LoginPage';
 import { Flame, ClipboardList } from 'lucide-react'; 
 import './App.css';
-import PerfilPage from "./pages/PerfilPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,30 +51,20 @@ function App() {
               </button>
             </nav>
 
-            {/* CONTENIDO DINÁMICO PASANDO LA ACCIÓN DE LOGOUT */}
+            {/* CONTENIDO DINÁMICO SOPORTANDO TRES VISTAS */}
             <main className="content-container">
-
-  {vistaActiva === "swap" && (
-    <SwapPage
-      onLogout={handleLogout}
-      onEditarPerfil={() => setVistaActiva("perfil")}
-    />
-  )}
-
-  {vistaActiva === "historial" && (
-    <HistorialPage
-      onLogout={handleLogout}
-      onEditarPerfil={() => setVistaActiva("perfil")}
-    />
-  )}
-
-  {vistaActiva === "perfil" && (
-    <PerfilPage
-      volver={() => setVistaActiva("swap")}
-    />
-  )}
-
-</main>
+              {vistaActiva === 'swap' && (
+                <SwapPage onLogout={handleLogout} cambiarVista={setVistaActiva} />
+              )}
+              
+              {vistaActiva === 'historial' && (
+                <HistorialPage onLogout={handleLogout} cambiarVista={setVistaActiva} />
+              )}
+      
+            {vistaActiva === 'perfil' && (
+                <PerfilPage cambiarVista={setVistaActiva} />
+              )}
+            </main>
 
           </div>
         </div>

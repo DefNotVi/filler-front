@@ -3,20 +3,26 @@ import { UserMenu } from '../components/UserMenu';
 import { ResumenContext } from '../context/ResumenContext';
 import { RefreshCw } from 'lucide-react'; // Icono moderno para refrescar
 
-export const HistorialPage = ({ onLogout, onEditarPerfil }) => {
+// REEMPLAZADO: Cambiamos onEditarPerfil por cambiarVista para mantener la sincronía con App.jsx
+export const HistorialPage = ({ onLogout, cambiarVista }) => {
   const { historial, cargandoResumen, refrescarHistorial } = useContext(ResumenContext);
 
   return (
     <div className="historial-container">
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-  <UserMenu
-    onLogout={onLogout}
-    onEditarPerfil={onEditarPerfil}
-  />
-</div>
-      <h2 className="historial-title">📋 Historial de Decisiones</h2>
       
-      <button onClick={refrescarHistorial} className="btn-refresh">
+      {/* INTEGRADO: Usamos la cabecera estructurada idéntica a la de SwapPage */}
+      <header className="app-header header-with-action">
+        <div className="header-title-block">
+          <h2 className="historial-title" style={{ margin: 0 }}>📋 Historial de Decisiones</h2>
+          <p className="subtitle" style={{ margin: '5px 0 0 0' }}>Tus interacciones registradas</p>
+        </div>
+        
+        {/* El menú de usuario recibe las funciones correctas */}
+        <UserMenu onLogout={onLogout} cambiarVista={cambiarVista} />
+      </header>
+      
+      {/* Botón de actualizar */}
+      <button onClick={refrescarHistorial} className="btn-refresh" style={{ marginTop: '15px' }}>
         <RefreshCw size={16} /> Actualizar Datos
       </button>
 

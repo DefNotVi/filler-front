@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { Sparkles } from 'lucide-react';
 import { PerfilContext } from '../context/PerfilContext'; 
 import { OtakuCard } from '../components/OtakuCard';
-import { UserMenu } from '../components/UserMenu'; 
+import { UserMenu } from '../components/UserMenu';
 
-export const SwapPage = ({ onLogout, onEditarPerfil }) => {
+// 1. Agrega cambiarVista aquí en las props
+export const SwapPage = ({ onLogout, cambiarVista }) => {
   const { perfilActual, mensajeMatch, cargando } = useContext(PerfilContext);
 
   if (cargando) {
@@ -21,8 +22,8 @@ export const SwapPage = ({ onLogout, onEditarPerfil }) => {
           <p className="subtitle">Encuentra tu media naranja (o tu contraparte de dúo en Lol)</p>
         </div>
         
-        {/* EN LA ESQUINA DERECHA DE LA TARJETA */}
-        <UserMenu onLogout={onLogout} />
+        {/* 2. Pásalo aquí para que UserMenu pueda usarlo */}
+        <UserMenu onLogout={onLogout} cambiarVista={cambiarVista} />
       </header>
 
       <main className="card-container">
