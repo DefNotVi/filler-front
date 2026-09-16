@@ -5,23 +5,21 @@ import { PerfilContext } from '../context/PerfilContext';
 export const OtakuCard = () => {
   const { perfilActual, enviarReaccion } = useContext(PerfilContext);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   if (!perfilActual) return null;
 
-  
-  // encodeURIComponent asegura que el link de internet no rompa los parámetros de la URL
-  const urlImagenConProxy = `${API_BASE_URL}/api/perfiles/proxy-image?url=${encodeURIComponent(perfilActual.fotoUrl)}`;
+  // Si la foto es una ruta relativa (como "/cpp.jpg"), le pega la API Base, si no, usa la URL directa de Imgur
+  const urlImagen = perfilActual.fotoUrl?.startsWith('http')
+    ? perfilActual.fotoUrl
+    : `${import.meta.env.VITE_API_BASE_URL}${perfilActual.fotoUrl}`;
 
   return (
     <div className="otaku-card">
       <div className="card-image-container">
         <img 
-          src={urlImagenConProxy} 
+          src={urlImagen} 
           alt={perfilActual.nombre} 
           className="card-image" 
           onError={(e) => {
-            // Salvavidas por si un link llega a caerse (no abran la imagen, no rompe nada, solo no lo hagan)
             e.target.src = "https://i.imgur.com/fGBdnlD.png";
           }}
         />

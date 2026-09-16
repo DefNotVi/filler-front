@@ -1,32 +1,31 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useMsal } from '@azure/msal-react';
+import { fetchConToken } from '../api';
 
 export const ResumenContext = createContext();
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 export const ResumenProvider = ({ children }) => {
+  const { instance, accounts } = useMsal();
   const [historial, setHistorial] = useState([]);
   const [cargandoResumen, setCargandoResumen] = useState(false);
 
-  // Función para obtener todas las reacciones desde el backend de resumen a través del Gateway
-  const obtenerHistorial = () => {
+  const obtenerHistorial = async () => {
+    if (accounts.length === 0) return;
     setCargandoResumen(true);
-    fetch(`${API_BASE_URL}/api/v1/resumen/api/reacciones`)
-      .then(response => response.json())
-      .then(data => {
-        setHistorial(data);
-        setCargandoResumen(false);
-      })
-      .catch(error => {
-        console.error("Error al obtener el historial de resumen:", error);
-        setCargandoResumen(false);
-      });
+
+    try {
+      const data = await fetchConToken('/api/v1/resumen/api/reacciones', instance, accounts[0]);
+      setHistorial(data);
+    } catch (error) {
+      console.error("Error al obtener el historial de resumen:", error);
+    } finally {
+      setCargandoResumen(false);
+    }
   };
 
-  // Cargar el historial automáticamente al montar el contexto
   useEffect(() => {
     obtenerHistorial();
-  }, []);
+  }, [accounts, instance]);
 
   return (
     <ResumenContext.Provider value={{ historial, cargandoResumen, refrescarHistorial: obtenerHistorial }}>

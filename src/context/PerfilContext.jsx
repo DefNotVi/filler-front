@@ -1,92 +1,70 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useMsal } from '@azure/msal-react';
+import { fetchConToken } from '../api';
 
 export const PerfilContext = createContext();
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 export const PerfilProvider = ({ children }) => {
+  const { instance, accounts } = useMsal();
   const [perfiles, setPerfiles] = useState([]);
   const [perfilActual, setPerfilActual] = useState(null);
   const [mensajeMatch, setMensajeMatch] = useState("");
   const [cargando, setCargando] = useState(true);
 
-  // Función utilitaria para obtener las cabeceras con el token JWT
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-      'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-    };
-  };
-
+  // Cargar perfiles al iniciar sesión
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/perfiles`, {
-      method: 'GET',
-      headers: getAuthHeaders() // Se añade el header de autenticación
-    })
-      .then(response => {
-        if (response.status === 401 || response.status === 403) {
-          // Si el token no es válido o expiró, forzamos deslogueo reactivo
-          localStorage.removeItem('token');
-          localStorage.removeItem('username');
-          window.location.reload(); 
-          throw new Error("Sesión expirada o no autorizada");
-        }
-        return response.json();
-      })
-      .then(data => {
+    const cargarPerfiles = async () => {
+      if (accounts.length === 0) return;
+      
+      try {
+        const data = await fetchConToken('/api/perfiles', instance, accounts[0]);
         setPerfiles(data);
-        if (data.length > 0) setPerfilActual(data[0]);
+        if (data && data.length > 0) setPerfilActual(data[0]);
+      } catch (error) {
+        console.error("Error cargando perfiles:", error);
+      } finally {
         setCargando(false);
-      })
-      .catch(error => {
-        console.error("Error cargando perfiles desde el backend:", error);
-        setCargando(false);
-      });
-  }, []);
+      }
+    };
 
-  const enviarReaccion = (accion) => {
-    if (!perfilActual) return;
+    cargarPerfiles();
+  }, [accounts, instance]);
+
+  // Enviar reaccion al reaccionar a un perfil
+  const enviarReaccion = async (accion) => {
+    if (!perfilActual || accounts.length === 0) return;
     setMensajeMatch(""); 
 
-    // Guardar en el backend principal (filler-back-main) mediante el ApiGateway
-    fetch(`${API_BASE_URL}/api/perfiles/reaccion`, {
-      method: 'POST',
-      headers: getAuthHeaders(), // Se añade el header de autenticación
-      body: JSON.stringify({ perfilId: perfilActual.id, accion })
-    })
-      .then(response => {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.removeItem('token');
-          window.location.reload();
-          throw new Error("Sesión inválida al intentar reaccionar");
-        }
-        return response.json();
-      })
-      .then(data => {
-        setMensajeMatch(data.mensaje);
+    try {
+      // 1. Guardar reacción en el backend principal a través del API Gateway
+      const data = await fetchConToken('/api/perfiles/reaccion', instance, accounts[0], {
+        method: 'POST',
+        body: JSON.stringify({ perfilId: perfilActual.id, accion })
+      });
 
-        // Guardar en el backend de resumen (filler-resumen)
-        fetch(`${API_BASE_URL}/api/v1/resumen/api/reacciones`, {
-          method: 'POST',
-          headers: getAuthHeaders(), // Se añade el header de autenticación
-          body: JSON.stringify({
-            perfilId: perfilActual.id,
-            nombre: perfilActual.nombre,
-            anime: perfilActual.animeOOrigen,
-            accion: accion
-          })
+      setMensajeMatch(data.mensaje);
+
+      // 2. Reportar al servicio de resumen
+      fetchConToken('/api/v1/resumen/api/reacciones', instance, accounts[0], {
+        method: 'POST',
+        body: JSON.stringify({
+          perfilId: perfilActual.id,
+          nombre: perfilActual.nombre,
+          anime: perfilActual.animeOOrigen,
+          accion: accion
         })
-          .then(res => res.json())
-          .then(resumenGuardado => console.log("Historial guardado en resumen:", resumenGuardado))
-          .catch(err => console.error("Error al reportar al backend de resumen:", err));
-
-        // Pasar al siguiente perfil en la interfaz de usuario
-        const nuevosPerfiles = perfiles.slice(1);
-        setPerfiles(nuevosPerfiles);
-        setPerfilActual(nuevosPerfiles.length > 0 ? nuevosPerfiles[0] : null);
       })
-      .catch(error => console.error("Error al reaccionar:", error));
+      .then(resumenGuardado => console.log("Historial guardado en resumen:", resumenGuardado))
+      .catch(err => console.error("Error al reportar al backend de resumen:", err));
+
+      // 3. Avanzar al siguiente perfil en pantalla
+      const nuevosPerfiles = perfiles.slice(1);
+      setPerfiles(nuevosPerfiles);
+      setPerfilActual(nuevosPerfiles.length > 0 ? nuevosPerfiles[0] : null);
+
+    } catch (error) {
+      console.error("Error al procesar reaccion:", error);
+    }
   };
 
   return (
