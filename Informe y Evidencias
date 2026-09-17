@@ -17,7 +17,48 @@ El sistema implementa una arquitectura Cloud-Native dividida en tres capas princ
 
 ---
 
-## 2. Configuración de Identidad y Seguridad (IDaaS - Azure AD)
+## 2. Conexiones a EC2 y otros
+
+* Inicia el laboratorio de AWS
+
+* **Actualiza la IP en API Gateway (Si cambió):**
+
+* Ve a la consola de EC2 en AWS y copia la nueva IPv4 pública.
+
+* Entra a API Gateway -> Integraciones.
+
+* Edita la URL de integración svzvncb para que apunte a la nueva IP: http://<NUEVA_IP_EC2>:8080/{proxy}.
+
+* Inicia el Backend en la EC2 (si es que no los subió, esta es la manera en la que nosotros lo hicimos):
+
+* **descargar extensión de remote ssh (microsoft) para vs code**
+* f1 en vscode y seleccionar opción "remote ssh: connect to host" y añadir un nuevo host
+* ssh -i "C:/ruta/a/la/llave.pem" ec2-user@<IP_PUBLICA_EC2>
+* Ve otra vez a usar f1 y esta vez seleccionar la opción creada
+* VS Code preguntará qué archivo de configuración actualizar. Selecciona la primera opción (por ejemplo, C:\Users\tu_usuario.ssh\config).
+* **Dentro de la consola EC2 en vscode**
+* Se abrirá para elegir 3 opciones de las cuales debe seleccionar "Linux" y después continuar
+* Ve a File y luego Open Folder, después de eso seleccionar ["/home/ec2-user/" y darle a "OK"](https://i.imgur.com/f7XQhIQ.png)
+* Arrastra los .jar de los backends a la ventana del vscode (usar el codigo "./mvnw clean package -DskipTests" en la terminal de los backs para compilarlos, estos aparecerán en la carpeta "target")
+
+* **Iniciar el servicio de Docker y la base de datos PostgreSQL**
+* sudo systemctl start docker
+* sudo docker start postgres-filler
+
+* **Reorganizar y levantar los 3 microservicios Java**
+* **Puede saltarse los pasos anteriores y llegar hasta acá si es que ya hizo lo anterior**
+* nohup java -jar gateway.jar > gateway.log 2>&1 &
+* nohup java -jar main.jar > main.log 2>&1 &
+* nohup java -jar resumen.jar > resumen.log 2>&1 &
+
+* **Verificar que los 3 servicios estén activos**
+* ps aux | grep java
+
+* Luego de eso hacer un "npm run dev" en el front 
+
+---
+
+## 3. Configuración de Identidad y Seguridad (IDaaS - Azure AD)
 
 * **Tenant ID:** 87c304cc-22d8-44f5-8876-e82e9b090abb
 * **App Client ID:** a6544f6f-1d06-421d-a743-3d225ee06a97
@@ -25,7 +66,7 @@ El sistema implementa una arquitectura Cloud-Native dividida en tres capas princ
 
 ---
 
-## 3. Configuración del API Manager (AWS API Gateway)
+## 4. Configuración del API Manager (AWS API Gateway)
 
 ### Configuración de Rutas y Métodos
 * ANY /{proxy+} -> Dirigido a la instancia EC2 (`http://<IP_EC2>:8080/{proxy}`).
@@ -40,18 +81,20 @@ El sistema implementa una arquitectura Cloud-Native dividida en tres capas princ
 
 ---
 
-## 4. Evidencias de Funcionamiento
+## 5. Evidencias de Funcionamiento
 
-### 4.1. Autenticación y Consumo Correcto (Respuesta 200 OK)
-* **Descripción:** Petición realizada desde el Frontend adjuntando el encabezado `Authorization: Bearer <JWT_TOKEN>`. El API Gateway valida el token y la EC2 responde exitosamente.
+### 5.1. Autenticación y Consumo Correcto (Respuesta 200 OK)
+* **Descripción:** Petición realizada desde el Frontend adjuntando el encabezado "Authorization: Bearer <JWT_TOKEN>". El API Gateway valida el token y la EC2 responde exitosamente.
 * **Evidencia:**  
-  [Insertar captura de la pestaña Network en F12 mostrando peticiones a /api/perfiles con estado 200 OK]
+  [Evidencia 200 OK](https://i.imgur.com/iEtZPUB.png)
 
-### 4.2. Rechazo de Petición no Autorizada (Respuesta 401 Unauthorized)
+### 5.2. Rechazo de Petición no Autorizada (Respuesta 401 Unauthorized)
 * **Descripción:** Petición realizada directamente a la URL del API Gateway sin incluir el token Bearer o con un token alterado.
 * **Evidencia:**  
-  [Insertar captura de Fetch en consola (el f12) devolviendo error 401 Unauthorized desde API Gateway]
+  [Evidencia 401 Unauthorized](https://i.imgur.com/oWOakOA.png)
 
-### 4.3. Vista del API Manager en AWS
+### 5.3. Vista del API Manager en AWS
 * **Evidencia:**  
-  [Insertar captura de la consola de AWS API Gateway mostrando las Rutas y el Autorizador JWT configurado]
+ [Configuración API Gateway](https://i.imgur.com/Wg6fSia.png)
+(https://i.imgur.com/pu8pZH2.png)
+(https://i.imgur.com/0Dxbepa.png)
