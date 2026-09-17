@@ -1,0 +1,57 @@
+# Informe y Evidencias - Filler
+
+**Asignatura:** Desarrollo Cloud Native I (DSY1107)  
+**Evaluación:** Evaluación Parcial N° 2 - Presentación y Evidencia  
+**Integrantes:** Vicente Escobar - Cristian Ceballos  
+**Fecha:** 17 de Septiembre, 2026  
+
+---
+
+## 1. Resumen de la Arquitectura
+
+El sistema implementa una arquitectura Cloud-Native dividida en tres capas principales protegidas por identidad federada:
+
+* **Frontend:** Desarrollado en React + Vite, integra el flujo **OAuth 2.0** a través de la librería MSAL para interactuar con Azure AD
+* **API Manager (AWS API Gateway):** Actua como el unico punto de entrada publico, administra el enrutamiento HTTP, aplica politicas de **CORS** preflight (OPTIONS) y valida el token JWT emitido por Microsoft Azure AD
+* **Backend:** Microservicio en Spring Boot alojado en una instancia AWS EC2, encargado de procesar la lógica de negocio e interactuar con la base de datos
+
+---
+
+## 2. Configuración de Identidad y Seguridad (IDaaS - Azure AD)
+
+* **Tenant ID:** 87c304cc-22d8-44f5-8876-e82e9b090abb
+* **App Client ID:** a6544f6f-1d06-421d-a743-3d225ee06a97
+* **Flujo de Autenticación:** Authorization Code
+
+---
+
+## 3. Configuración del API Manager (AWS API Gateway)
+
+### Configuración de Rutas y Métodos
+* ANY /{proxy+} -> Dirigido a la instancia EC2 (`http://<IP_EC2>:8080/{proxy}`).
+* OPTIONS /{proxy+} -> Ruta pública sin autorizador para resolver el Preflight de CORS.
+
+### Autorizador JWT
+* **Nombre:** AzureAD-Authorizer
+* **Type:** JWT
+* **Iss:** https://sts.windows.net/87c304cc-22d8-44f5-8876-e82e9b090abb/
+* **Aud:** a6544f6f-1d06-421d-a743-3d225ee06a97
+* **Identity Source:** $request.header.Authorization
+
+---
+
+## 4. Evidencias de Funcionamiento
+
+### 4.1. Autenticación y Consumo Correcto (Respuesta 200 OK)
+* **Descripción:** Petición realizada desde el Frontend adjuntando el encabezado `Authorization: Bearer <JWT_TOKEN>`. El API Gateway valida el token y la EC2 responde exitosamente.
+* **Evidencia:**  
+  [Insertar captura de la pestaña Network en F12 mostrando peticiones a /api/perfiles con estado 200 OK]
+
+### 4.2. Rechazo de Petición no Autorizada (Respuesta 401 Unauthorized)
+* **Descripción:** Petición realizada directamente a la URL del API Gateway sin incluir el token Bearer o con un token alterado.
+* **Evidencia:**  
+  [Insertar captura de Fetch en consola (el f12) devolviendo error 401 Unauthorized desde API Gateway]
+
+### 4.3. Vista del API Manager en AWS
+* **Evidencia:**  
+  [Insertar captura de la consola de AWS API Gateway mostrando las Rutas y el Autorizador JWT configurado]
