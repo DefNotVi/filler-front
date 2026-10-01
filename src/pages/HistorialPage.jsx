@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import { UserMenu } from '../components/UserMenu';
 import { ResumenContext } from '../context/ResumenContext';
-import { RefreshCw } from 'lucide-react'; // Icono moderno para refrescar
+import { RefreshCw } from 'lucide-react';
+import { RabbitStatus } from '../components/RabbitStatus'; // 1. IMPORTAR COMPONENTE
 
 export const HistorialPage = ({ onLogout, cambiarVista }) => {
   const { historial, cargandoResumen, refrescarHistorial } = useContext(ResumenContext);
-
-  // Asegura siempre un arreglo para iterar sin errores
   const listaHistorial = Array.isArray(historial) ? historial : [];
 
   return (
@@ -23,8 +22,11 @@ export const HistorialPage = ({ onLogout, cambiarVista }) => {
         <RefreshCw size={16} /> Actualizar Datos
       </button>
 
+      {/* 2. AGREGAR EL MONITOR AQUÍ */}
+      <RabbitStatus />
+
       {cargandoResumen ? (
-        <p style={{ color: '#8d8d99', marginTop: '15px' }}>Buscando registros en el archivo...</p>
+        <p style={{ color: '#8d8d99', marginTop: '15px' }}>Buscando registros...</p>
       ) : listaHistorial.length === 0 ? (
         <p style={{ color: '#8d8d99', marginTop: '15px' }}>Ninguna waifu o husbando calificado todavía.</p>
       ) : (

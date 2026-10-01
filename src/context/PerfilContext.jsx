@@ -57,7 +57,24 @@ export const PerfilProvider = ({ children }) => {
       .then(resumenGuardado => console.log("Historial guardado en resumen:", resumenGuardado))
       .catch(err => console.error("Error al reportar al backend de resumen:", err));
 
-      // 3. Avanzar al siguiente perfil en pantalla
+      // 3. ENVIAR EVENTO A RABBITMQ EN SEGUNDO PLANO
+      fetchConToken('/api/orders/send', instance, accounts[0], {
+        method: 'POST',
+        body: JSON.stringify({
+          orderId: `REACCION-${Date.now()}`,
+          customerName: accounts[0]?.username || 'Usuario Otaku',
+          // Usamos JSON.stringify para convertir los detalles a String plano
+          detalles: JSON.stringify({
+            accion: accion,
+            perfilEvaluado: perfilActual.nombre,
+            perfilId: perfilActual.id
+          })
+        })
+      })
+      .then(resRabbit => console.log("→ Evento enviado a RabbitMQ:", resRabbit))
+      .catch(errRabbit => console.warn("⚠ Error RabbitMQ:", errRabbit));
+
+      // 4. Avanzar al siguiente perfil en pantalla
       const nuevosPerfiles = perfiles.slice(1);
       setPerfiles(nuevosPerfiles);
       setPerfilActual(nuevosPerfiles.length > 0 ? nuevosPerfiles[0] : null);

@@ -1,7 +1,8 @@
 import { loginRequest } from "./AuthConfig";
 
 // Limpiamos la URL quitando cualquier barra final sobrante
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "https://d5s26lhjse.execute-api.us-east-1.amazonaws.com").replace(/\/$/, "");
+// Reemplaza la URL de AWS por la de tu local
+const BASE_URL = "http://localhost:8080";
 
 export const fetchConToken = async (endpoint, instance, account, options = {}) => {
   try {
